@@ -2,8 +2,9 @@ package main
 
 import (
 	"e-commerce/config"
-	"e-commerce/controllers"
+	"e-commerce/middlewares"
 	"e-commerce/models"
+	"e-commerce/routes"
 	"log"
 	"os"
 
@@ -20,29 +21,20 @@ func main() {
 
 	config.DbConnect()
 	models.Migrate()
-	
+
 	router := gin.Default()
 
+	// Routes
 	auth := router.Group("/auth")
-	{
-		auth.POST("/register", controllers.Register)
-		auth.POST("/login", controllers.Login)
-	}
+	routes.AuthRoutes(auth)
 
-	cart := router.Group("/cart")
-	{
-		cart.POST("/add", controllers.AddProductToCart)
-		cart.DELETE("/delete", controllers.DeleteProductFromCart)
-	}
+	cart := router.Group("/cart", middlewares.CheckAuth)
+	routes.CartRoutes(cart)
 
-	product := router.Group("/product")
-	{
-		product.GET("/list", controllers.GetProducts)
-		product.GET("/:id", controllers.GetProduct)
-		product.POST("/add", controllers.CreateProduct)
-		product.DELETE("/delete", controllers.DeleteProduct)
-	}
+	product := router.Group("/product", middlewares.CheckAuth)
+	routes.ProductRoutes(product)
 
+	// Run Server
 	port := os.Getenv("PORT")
 
 	if os.Getenv("PORT") != "" {
