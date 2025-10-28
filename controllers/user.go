@@ -23,7 +23,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{message: message})
+	c.JSON(http.StatusCreated, gin.H{"message": message})
 }
 
 func Login(c *gin.Context) {

@@ -7,6 +7,8 @@ import (
 )
 
 func ProductRoutes(rg *gin.RouterGroup) {
-	rg.POST("/add", controllers.AddProductToCart)
-	rg.DELETE("/delete", controllers.DeleteProductFromCart)
+	rg.GET("/list", controllers.GetProducts)
+	rg.GET("/:id", controllers.GetProduct)
+	rg.POST("/create", controllers.CreateProduct)
+	rg.DELETE("/:productId", controllers.DeleteProduct)
 }
